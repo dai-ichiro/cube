@@ -17,9 +17,9 @@ namespace main_exe
             Global.co_move_table = File_Operation.read_array("./data/co_move_table.data");
             Global.eo_move_table = File_Operation.read_array("./data/eo_move_table.data");
 
-            Global.cp_co_prune_table = File_Operation.read_array("./data/cp_co_prune_table.data");
-            Global.cp_eo_prune_table = File_Operation.read_array("./data/cp_eo_prune_table.data");
-            Global.co_eo_prune_table = File_Operation.read_array("./data/co_eo_prune_table.data");
+            Global.cp_co_prune_table = File_Operation.read_array("./data/cp_co_prune_table_minus_five.data");
+            Global.cp_eo_prune_table = File_Operation.read_array("./data/cp_eo_prune_table_minus_five.data");
+            Global.co_eo_prune_table = File_Operation.read_array("./data/co_eo_prune_table_minus_five.data");
 
             using (FileStream fs = new FileStream("./data/all_states_from_one_to_five_with_solution.data", FileMode.Open))
             {
@@ -52,8 +52,8 @@ namespace main_exe
 
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
-            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
-            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
+            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
+            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
             //scramble = "R' U' F R' B' F2 L2 D' U'";
@@ -108,9 +108,9 @@ namespace main_exe
 
             bool prune(int depth, Mini_State m_state)
             {
-                if (depth < Global.cp_co_prune_table[m_state.cp, m_state.co] - 5) return true;
-                if (depth < Global.cp_eo_prune_table[m_state.cp, m_state.eo] - 5) return true;
-                if (depth < Global.co_eo_prune_table[m_state.co, m_state.eo] - 5) return true;
+                if (depth < Global.cp_co_prune_table[m_state.cp, m_state.co]) return true;
+                if (depth < Global.cp_eo_prune_table[m_state.cp, m_state.eo]) return true;
+                if (depth < Global.co_eo_prune_table[m_state.co, m_state.eo]) return true;
                 return false;
             }
 
