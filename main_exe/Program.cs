@@ -47,6 +47,9 @@ namespace main_exe
 
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
 
+            int[] new_ep = new int[12];
+            int now_ep_index;
+
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
@@ -113,7 +116,7 @@ namespace main_exe
 
             int ep_move(int[] ep, List<int> moves)
             {
-                int[] new_ep = ep;
+                new_ep = ep;
                 foreach (int each_move in moves)
                 {
                     new_ep = Global.ep_move_dict[each_move].Select(x => new_ep[x]).ToArray();
@@ -129,7 +132,7 @@ namespace main_exe
             {
                 if (depth == 0 && is_solved(m_state))
                 {
-                    int now_ep_index = ep_move(initial_ep, current_solution);
+                    now_ep_index = ep_move(initial_ep, current_solution);
                     if (Global.all_states_after_five_moves.Contains((m_state.cp, m_state.co, now_ep_index, m_state.eo)))
                     {
                         last_5_solution = Global.all_states_with_solution[(m_state.cp, m_state.co, now_ep_index, m_state.eo)];
