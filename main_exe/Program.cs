@@ -53,6 +53,32 @@ namespace main_exe
 
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
 
+            string scramble;
+            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
+            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
+            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
+            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
+            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
+            //scramble = "R' U' F R' B' F2 L2 D' U'";
+            //scramble = "R' U' F R' B' F2 L2";
+            //scramble = "R' U' F R' B'";
+            //scramble = "R' U' F R'";
+
+            State scramble2state(string scramble)
+            {
+                State start_state = new State(0, 0, Enumerable.Range(0, 12).ToArray(), 0);
+                int[] moves = scramble.Split(" ").Select(x => Array.IndexOf(move_names, x)).ToArray();
+                foreach (int each_move in moves)
+                {
+                    start_state = start_state.apply_move(each_move);
+                }
+                return start_state;
+            }
+
+            State scrambled_state = scramble2state(scramble);
+            Mini_State scrambled_mini_state = new Mini_State(scrambled_state.cp, scrambled_state.co, scrambled_state.eo);
+            int[] initial_ep = scrambled_state.ep;
+            
             bool is_move_available(int pre, int now)
             {
                 if (pre == -1) return true;
@@ -77,39 +103,57 @@ namespace main_exe
                 return index;
             }
 
-            bool is_solved(State q_state)
+            bool is_solved(Mini_State m_state)
             {
-                if (!(Global.cp_after_five_moves.Contains(q_state.cp))) return false;
-                if (!(Global.cp_co_eo_after_five_moves.Contains((q_state.cp, q_state.co, q_state.eo)))) return false;
-
-                return Global.all_states_after_five_moves.Contains((q_state.cp, q_state.co, ep_to_index(q_state.ep), q_state.eo));
+                if (!(Global.cp_after_five_moves.Contains(m_state.cp))) return false;
+                return Global.cp_co_eo_after_five_moves.Contains((m_state.cp, m_state.co, m_state.eo));
             }
 
-            bool prune(int depth, State q_state)
+            bool prune(int depth, Mini_State m_state)
             {
-                if (depth < Global.cp_co_prune_table[q_state.cp, q_state.co] - 5) return true;
-                if (depth < Global.cp_eo_prune_table[q_state.cp, q_state.eo] - 5) return true;
-                if (depth < Global.co_eo_prune_table[q_state.co, q_state.eo] - 5) return true;
-                if (depth == 2 && !(Global.ep_after_7_moves.Contains(ep_to_index(q_state.ep)))) return true;
+                if (depth < Global.cp_co_prune_table[m_state.cp, m_state.co] - 5) return true;
+                if (depth < Global.cp_eo_prune_table[m_state.cp, m_state.eo] - 5) return true;
+                if (depth < Global.co_eo_prune_table[m_state.co, m_state.eo] - 5) return true;
                 return false;
             }
+
+            int ep_move(int[] ep, List<int> moves)
+            {
+                int[] new_ep = ep;
+                foreach (int each_move in moves)
+                {
+                    new_ep = Global.ep_move_dict[each_move].Select(x => new_ep[x]).ToArray();
+                }
+
+                return ep_to_index(new_ep);  
+            }
+
 
             List<int> current_solution = new List<int> { };
             string[] last_5_solution = new string[] { };
 
-            bool depth_limited_search(State q_state, int depth)
+            bool depth_limited_search(Mini_State m_state, int depth)
             {
-                if (depth == 0 && is_solved(q_state))
+                if (depth == 0 && is_solved(m_state))
                 {
-                    last_5_solution = Global.all_states_with_solution[(q_state.cp, q_state.co, ep_to_index(q_state.ep), q_state.eo)];
-                    return true;
+                    int now_ep_index = ep_move(initial_ep, current_solution);
+                    if (Global.all_states_after_five_moves.Contains((m_state.cp, m_state.co, now_ep_index, m_state.eo)))
+                    {
+                        last_5_solution = Global.all_states_with_solution[(m_state.cp, m_state.co, now_ep_index, m_state.eo)];
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
+
                 if (depth == 0)
                 {
                     return false;
                 }
 
-                if (depth < 6 && prune(depth, q_state))
+                if (depth < 6 && prune(depth, m_state))
                 {
                     return false;
                 }
@@ -119,35 +163,13 @@ namespace main_exe
                 {
                     if (!(is_move_available(prev_move, move_num))) continue;
                     current_solution.Add(move_num);
-                    if (depth_limited_search(q_state.apply_move(move_num), depth - 1)) return true;
+                    if (depth_limited_search(m_state.apply_move(move_num), depth - 1)) return true;
                     current_solution.RemoveAt(current_solution.Count - 1);
                 }
                 return false;
             }
 
-            string scramble;
-            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
-            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
-            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
-            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
-            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
-            //scramble = "R' U' F R' B' F2 L2 D' U'";
-            //scramble = "R' U' F R' B' F2 L2";
-            //scramble = "R' U' F R' B'";
-            //scramble = "R' U' F R'";
-
-            State scramble2state(string scramble)
-            {
-                State start_state = new State(0, 0, Enumerable.Range(0, 12).ToArray(), 0);
-                int[] moves = scramble.Split(" ").Select(x => Array.IndexOf(move_names, x)).ToArray();
-                foreach (int each_move in moves)
-                {
-                    start_state = start_state.apply_move(each_move);
-                }
-                return start_state;
-            }
-
-            State scrambled_state = scramble2state(scramble);
+            
 
             var sw = new Stopwatch();
             sw.Start();
@@ -174,7 +196,7 @@ namespace main_exe
                 for (int depth = 1; depth < 16; depth++)
                 {
                     Console.WriteLine("Start searching lenght {0}", depth + 5);
-                    if (depth_limited_search(scrambled_state, depth)) break;
+                    if (depth_limited_search(scrambled_mini_state, depth)) break;
                 }
                 Console.WriteLine(string.Join(" ", current_solution.Select(x => move_names[x])) + " " + string.Join(" ", last_5_solution));
             }
