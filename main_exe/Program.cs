@@ -52,10 +52,10 @@ namespace main_exe
 
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
-            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
+            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
-            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
+            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
             //scramble = "R' U' F R' B' F2 L2 D' U'";
             //scramble = "R' U' F R' B' F2 L2";
             //scramble = "R' U' F R' B'";
@@ -119,7 +119,19 @@ namespace main_exe
                 new_ep = ep;
                 foreach (int each_move in moves)
                 {
-                    new_ep = Global.ep_move_dict[each_move].Select(x => new_ep[x]).ToArray();
+                    new_ep[0] = new_ep[Global.ep_move_dict[each_move][0]];
+                    new_ep[1] = new_ep[Global.ep_move_dict[each_move][1]];
+                    new_ep[2] = new_ep[Global.ep_move_dict[each_move][2]];
+                    new_ep[3] = new_ep[Global.ep_move_dict[each_move][3]];
+                    new_ep[4] = new_ep[Global.ep_move_dict[each_move][4]];
+                    new_ep[5] = new_ep[Global.ep_move_dict[each_move][5]];
+                    new_ep[6] = new_ep[Global.ep_move_dict[each_move][6]];
+                    new_ep[7] = new_ep[Global.ep_move_dict[each_move][7]];
+                    new_ep[8] = new_ep[Global.ep_move_dict[each_move][8]];
+                    new_ep[9] = new_ep[Global.ep_move_dict[each_move][9]];
+                    new_ep[10] = new_ep[Global.ep_move_dict[each_move][10]];
+                    new_ep[11] = new_ep[Global.ep_move_dict[each_move][11]];
+//                    new_ep = Global.ep_move_dict[each_move].Select(x => new_ep[x]).ToArray();
                 }
 
                 return ep_to_index(new_ep);  
