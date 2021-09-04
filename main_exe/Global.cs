@@ -38,6 +38,5 @@ namespace main_exe
         public static HashSet<(int, int, int, int)> all_states_after_five_moves;
         public static HashSet<(int, int, int)> cp_co_eo_after_five_moves;
         public static HashSet<int> cp_after_five_moves;
-        public static HashSet<int> ep_after_7_moves;
     }
 }

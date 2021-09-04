@@ -45,19 +45,13 @@ namespace main_exe
                 Global.cp_after_five_moves = (HashSet<int>)bf.Deserialize(fs);
             }
 
-            using (FileStream fs = new FileStream("./data/ep_after_7_moves.data", FileMode.Open))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                Global.ep_after_7_moves = (HashSet<int>)bf.Deserialize(fs);
-            }
-
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
 
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
-            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
+            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
-            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
+            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
             //scramble = "R' U' F R' B' F2 L2 D' U'";
             //scramble = "R' U' F R' B' F2 L2";
@@ -128,7 +122,6 @@ namespace main_exe
                 return ep_to_index(new_ep);  
             }
 
-
             List<int> current_solution = new List<int> { };
             string[] last_5_solution = new string[] { };
 
@@ -168,8 +161,6 @@ namespace main_exe
                 }
                 return false;
             }
-
-            
 
             var sw = new Stopwatch();
             sw.Start();
