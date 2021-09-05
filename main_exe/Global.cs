@@ -33,10 +33,5 @@ namespace main_exe
             {16, new int[]{ 1, 0, 2, 3, 8, 5, 6, 7, 4, 9, 10, 11 } },
             {17, new int[]{ 8, 4, 2, 3, 0, 5, 6, 7, 1, 9, 10, 11 } }
         };
-
-        public static Dictionary<(int, int, int, int), string[]> all_states_with_solution;
-        public static HashSet<(int, int, int, int)> all_states_after_five_moves;
-        public static HashSet<(int, int, int)> cp_co_eo_after_five_moves;
-        public static HashSet<int> not_exist_cp_after_five_moves;
     }
 }

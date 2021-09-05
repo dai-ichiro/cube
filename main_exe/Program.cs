@@ -17,33 +17,9 @@ namespace main_exe
             Global.co_move_table = File_Operation.read_array("./data/co_move_table.data");
             Global.eo_move_table = File_Operation.read_array("./data/eo_move_table.data");
 
-            Global.cp_co_prune_table = File_Operation.read_array("./data/cp_co_prune_table_minus_five.data");
-            Global.cp_eo_prune_table = File_Operation.read_array("./data/cp_eo_prune_table_minus_five.data");
-            Global.co_eo_prune_table = File_Operation.read_array("./data/co_eo_prune_table_minus_five.data");
-
-            using (FileStream fs = new FileStream("./data/all_states_from_one_to_five_with_solution.data", FileMode.Open))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                Global.all_states_with_solution= (Dictionary<(int, int, int, int), string[]>)bf.Deserialize(fs);
-            }
-
-            using (FileStream fs = new FileStream("./data/all_states_after_five_moves.data", FileMode.Open))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                Global.all_states_after_five_moves = (HashSet<(int, int, int, int)>)bf.Deserialize(fs);
-            }
-
-            using (FileStream fs = new FileStream("./data/cp_co_eo_after_five_moves.data", FileMode.Open))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                Global.cp_co_eo_after_five_moves = (HashSet<(int, int, int)>)bf.Deserialize(fs);
-            }
-
-            using (FileStream fs = new FileStream("./data/not_exist_cp_after_five_moves.data", FileMode.Open))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                Global.not_exist_cp_after_five_moves = (HashSet<int>)bf.Deserialize(fs);
-            }
+            Global.cp_co_prune_table = File_Operation.read_array("./data/cp_co_prune_table.data");
+            Global.cp_eo_prune_table = File_Operation.read_array("./data/cp_eo_prune_table.data");
+            Global.co_eo_prune_table = File_Operation.read_array("./data/co_eo_prune_table.data");
 
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
 
@@ -102,8 +78,7 @@ namespace main_exe
 
             bool is_solved(Mini_State m_state)
             {
-                if (Global.not_exist_cp_after_five_moves.Contains(m_state.cp)) return false;
-                return Global.cp_co_eo_after_five_moves.Contains((m_state.cp, m_state.co, m_state.eo));
+                return(m_state.cp==0 && m_state.co==0 && m_state.eo==0);
             }
 
             bool prune(int depth, Mini_State m_state)
@@ -133,9 +108,8 @@ namespace main_exe
                 if (depth == 0 && is_solved(m_state))
                 {
                     now_ep_index = ep_move(initial_ep, current_solution);
-                    if (Global.all_states_after_five_moves.Contains((m_state.cp, m_state.co, now_ep_index, m_state.eo)))
+                    if (now_ep_index == 0)
                     {
-                        last_5_solution = Global.all_states_with_solution[(m_state.cp, m_state.co, now_ep_index, m_state.eo)];
                         return true;
                     }
                     else
@@ -149,7 +123,7 @@ namespace main_exe
                     return false;
                 }
 
-                if (depth < 6 && prune(depth, m_state))
+                if (prune(depth, m_state))
                 {
                     return false;
                 }
