@@ -37,6 +37,6 @@ namespace main_exe
         public static Dictionary<(int, int, int, int), string[]> all_states_with_solution;
         public static HashSet<(int, int, int, int)> all_states_after_five_moves;
         public static HashSet<(int, int, int)> cp_co_eo_after_five_moves;
-        public static HashSet<int> not_exist_ep_after_five_moves;
+        public static HashSet<int> not_exist_cp_after_five_moves;
     }
 }

@@ -39,10 +39,10 @@ namespace main_exe
                 Global.cp_co_eo_after_five_moves = (HashSet<(int, int, int)>)bf.Deserialize(fs);
             }
 
-            using (FileStream fs = new FileStream("./data/not_exist_ep_after_five_moves.data", FileMode.Open))
+            using (FileStream fs = new FileStream("./data/not_exist_cp_after_five_moves.data", FileMode.Open))
             {
                 BinaryFormatter bf = new BinaryFormatter();
-                Global.not_exist_ep_after_five_moves = (HashSet<int>)bf.Deserialize(fs);
+                Global.not_exist_cp_after_five_moves = (HashSet<int>)bf.Deserialize(fs);
             }
 
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
@@ -102,7 +102,7 @@ namespace main_exe
 
             bool is_solved(Mini_State m_state)
             {
-                if (Global.not_exist_ep_after_five_moves.Contains(m_state.cp)) return false;
+                if (Global.not_exist_cp_after_five_moves.Contains(m_state.cp)) return false;
                 return Global.cp_co_eo_after_five_moves.Contains((m_state.cp, m_state.co, m_state.eo));
             }
 
