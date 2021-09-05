@@ -21,29 +21,7 @@ namespace main_exe
             Global.cp_eo_prune_table = File_Operation.read_array("./data/cp_eo_prune_table_minus_five.data");
             Global.co_eo_prune_table = File_Operation.read_array("./data/co_eo_prune_table_minus_five.data");
 
-            using (FileStream fs = new FileStream("./data/all_states_from_one_to_five_with_solution.data", FileMode.Open))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                Global.all_states_with_solution= (Dictionary<(int, int, int, int), string[]>)bf.Deserialize(fs);
-            }
-
-            using (FileStream fs = new FileStream("./data/all_states_after_five_moves.data", FileMode.Open))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                Global.all_states_after_five_moves = (HashSet<(int, int, int, int)>)bf.Deserialize(fs);
-            }
-
-            using (FileStream fs = new FileStream("./data/cp_co_eo_after_five_moves.data", FileMode.Open))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                Global.cp_co_eo_after_five_moves = (HashSet<(int, int, int)>)bf.Deserialize(fs);
-            }
-
-            using (FileStream fs = new FileStream("./data/not_exist_ep_after_five_moves.data", FileMode.Open))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                Global.not_exist_ep_after_five_moves = (HashSet<int>)bf.Deserialize(fs);
-            }
+ 
 
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
 
@@ -61,20 +39,6 @@ namespace main_exe
             //scramble = "R' U' F R' B'";
             //scramble = "R' U' F R'";
 
-            State scramble2state(string scramble)
-            {
-                State start_state = new State(0, 0, Enumerable.Range(0, 12).ToArray(), 0);
-                int[] moves = scramble.Split(" ").Select(x => Array.IndexOf(move_names, x)).ToArray();
-                foreach (int each_move in moves)
-                {
-                    start_state = start_state.apply_move(each_move);
-                }
-                return start_state;
-            }
-
-            State scrambled_state = scramble2state(scramble);
-            Mini_State scrambled_mini_state = new Mini_State(scrambled_state.cp, scrambled_state.co, scrambled_state.eo);
-            int[] initial_ep = scrambled_state.ep;
             
             bool is_move_available(int pre, int now)
             {
@@ -86,43 +50,9 @@ namespace main_exe
                 return true;
             }
 
-            int ep_to_index(int[] ep)
-            {
-                int index = 0;
-                for (int i = 0; i < 12; i++)
-                {
-                    index *= 12 - i;
-                    for (int j = i + 1; j < 12; j++)
-                    {
-                        if (ep[i] > ep[j]) index += 1;
-                    }
-                }
-                return index;
-            }
-
             bool is_solved(Mini_State m_state)
             {
-                if (Global.not_exist_ep_after_five_moves.Contains(m_state.cp)) return false;
-                return Global.cp_co_eo_after_five_moves.Contains((m_state.cp, m_state.co, m_state.eo));
-            }
-
-            bool prune(int depth, Mini_State m_state)
-            {
-                if (depth < Global.cp_co_prune_table[m_state.cp, m_state.co]) return true;
-                if (depth < Global.cp_eo_prune_table[m_state.cp, m_state.eo]) return true;
-                if (depth < Global.co_eo_prune_table[m_state.co, m_state.eo]) return true;
-                return false;
-            }
-
-            int ep_move(int[] ep, List<int> moves)
-            {
-                new_ep = ep;
-                foreach (int each_move in moves)
-                {   
-                    new_ep = Global.ep_move_dict[each_move].Select(x => new_ep[x]).ToArray();
-                }
-
-                return ep_to_index(new_ep);  
+                return (m_state.cp == 0 && m_state.co == 0 && m_state.eo == 0);
             }
 
             List<int> current_solution = new List<int> { };
