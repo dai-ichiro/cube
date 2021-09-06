@@ -16,18 +16,8 @@ namespace main_exe
             Global.cp_move_table = File_Operation.read_array("./data/cp_move_table.data");
             Global.co_move_table = File_Operation.read_array("./data/co_move_table.data");
             Global.eo_move_table = File_Operation.read_array("./data/eo_move_table.data");
-
-            Global.cp_co_prune_table = File_Operation.read_array("./data/cp_co_prune_table.data");
-            Global.cp_eo_prune_table = File_Operation.read_array("./data/cp_eo_prune_table.data");
-            Global.co_eo_prune_table = File_Operation.read_array("./data/co_eo_prune_table.data");
  
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
-
-            int[] new_ep = new int[12];
-            int now_ep_index;
-
-            
-            
             
             bool is_move_available(int pre, int now)
             {
@@ -71,88 +61,54 @@ namespace main_exe
                 return ep;
             }
 
-            bool is_solved(Mini_State m_state)
+            State scramble2state(List<int> moves)
             {
-                return (m_state.cp == 0 && m_state.co == 0 && m_state.eo == 0);
-            }
+                State temp_state = new State(0, 0, Enumerable.Range(0, 12).ToArray(), 0);
 
-            bool prune(int depth, Mini_State m_state)
-            {
-                if (depth < Global.cp_co_prune_table[m_state.cp, m_state.co]) return true;
-                if (depth < Global.cp_eo_prune_table[m_state.cp, m_state.eo]) return true;
-                if (depth < Global.co_eo_prune_table[m_state.co, m_state.eo]) return true;
-                return false;
-            }
-
-            int ep_move(int[] ep, List<int> moves)
-            {
-                new_ep = ep;
                 foreach (int each_move in moves)
                 {
-                    new_ep = Global.ep_move_dict[each_move].Select(x => new_ep[x]).ToArray();
+                    temp_state = temp_state.apply_move(each_move);
                 }
-
-                return ep_to_index(new_ep);  
+                return temp_state;
             }
 
-            State scrambled_state = new State(0, 0, index_to_ep(1), 0);
-            Mini_State scrambled_mini_state = new Mini_State(0, 0, 0);
-            int[] initial_ep = scrambled_state.ep;
+            var moves = new List<int>();        //初期値
+            var result = new List<int[]>();     //結果を記録するリスト
 
-            List<int> current_solution = new List<int> { };
-            string[] last_5_solution = new string[] { };
+            State state_after_moves;
 
-            bool depth_limited_search(Mini_State m_state, int depth)
+            void try_move(int depth)
             {
-                if (depth == 0 && is_solved(m_state))
-                {
-                    now_ep_index = ep_move(initial_ep, current_solution);
-                    if (now_ep_index == 0)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-
                 if (depth == 0)
                 {
-                    return false;
+                    state_after_moves = scramble2state(moves);
+                    if(state_after_moves.cp==0 && state_after_moves.co==0 && state_after_moves.eo == 0)
+                    {
+                        result.Add(moves.ToArray());
+                    }
+                    return;
                 }
-
-                if (depth < 6 && prune(depth, m_state))
+                int prev_move = moves.Count == 0 ? -1 : moves.Last();
+                foreach (int i in Enumerable.Range(0, 18))
                 {
-                    return false;
+                    if (is_move_available(prev_move, i))
+                    {
+                        moves.Add(i);
+                        try_move(depth - 1);
+                        moves.RemoveAt(moves.Count - 1);
+                    }
                 }
-
-                int prev_move = current_solution.Count == 0 ? -1 : current_solution.Last();
-                for (int move_num = 0; move_num < 18; move_num++)
-                {
-                    if (!(is_move_available(prev_move, move_num))) continue;
-                    current_solution.Add(move_num);
-                    if (depth_limited_search(m_state.apply_move(move_num), depth - 1)) return true;
-                    current_solution.RemoveAt(current_solution.Count - 1);
-                }
-                return false;
             }
 
             var sw = new Stopwatch();
             sw.Start();
-
             Console.WriteLine("Start searching...");
+            
+            int move_count = 7;
+            try_move(move_count);
 
+            Console.WriteLine(result.Count.ToString());
             
-            
-            for (int depth = 0; depth < 16; depth++)
-            {
-                Console.WriteLine("Start searching lenght {0}", depth);
-                if (depth_limited_search(scrambled_mini_state, depth)) break;
-            }
-            Console.WriteLine(string.Join(" ", current_solution.Select(x => move_names[x])));
-            
-
             sw.Stop();
             TimeSpan ts = sw.Elapsed;
             Console.WriteLine("Finished!({0})", ts);
