@@ -142,7 +142,7 @@ namespace main_exe
             Console.WriteLine("Start searching...");
 
 
-            int depth = 7;            
+            int depth = 10;
                 
             Console.WriteLine("Start searching lenght {0}", depth);
             depth_limited_search(scrambled_mini_state, depth);
