@@ -19,15 +19,10 @@ namespace main_exe
             Global.cp_eo_prune_table = File_Operation.read_array("./data/cp_eo_prune_table.data");
             Global.co_eo_prune_table = File_Operation.read_array("./data/co_eo_prune_table.data");
 
-            Global.ep_index_6 = File_Operation.read_hash("./data/ep_index_6.data");
-            Global.ep_index_7 = File_Operation.read_hash("./data/ep_index_7.data");
-            Global.ep_index_8 = File_Operation.read_hash("./data/ep_index_8.data");
-
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
 
             int[] new_ep = new int[12];
             int now_ep_index;
-            int back_count = 0;
 
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
@@ -51,8 +46,8 @@ namespace main_exe
                 return start_state;
             }
 
-            State scrambled_state = scramble2state(scramble);
-            Mini_State scrambled_mini_state = new Mini_State(scrambled_state.cp, scrambled_state.co, scrambled_state.eo);
+            State scrambled_state = new State(0, 0, Enumerable.Range(0, 12).ToArray(), 0);
+            Mini_State scrambled_mini_state = new Mini_State(0, 0, 0);
             int[] initial_ep = scrambled_state.ep;
             
             bool is_move_available(int pre, int now)
@@ -103,41 +98,29 @@ namespace main_exe
                 return ep_to_index(new_ep);  
             }
 
-            int calc_back_count(int index)
-            {
-                if (Global.ep_index_6.Contains(index)) return 2;
-                if (Global.ep_index_7.Contains(index)) return 3;
-                if (Global.ep_index_8.Contains(index)) return 3;
-                return 4;
-            }
-
             List<int> current_solution = new List<int> { };
             string[] last_5_solution = new string[] { };
 
-            bool depth_limited_search(Mini_State m_state, int depth)
+            List<int> result = new List<int>();
+
+            void depth_limited_search(Mini_State m_state, int depth)
             {
                 if (depth == 0 && is_solved(m_state))
                 {
                     now_ep_index = ep_move(initial_ep, current_solution);
-                    if (now_ep_index == 0)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        back_count = calc_back_count(now_ep_index);
-                        return false;
-                    }
+
+                    result.Add(now_ep_index);
+                    return;
                 }
 
                 if (depth == 0)
                 {
-                    return false;
+                    return;
                 }
 
                 if (prune(depth, m_state))
                 {
-                    return false;
+                    return;
                 }
 
                 int prev_move = current_solution.Count == 0 ? -1 : current_solution.Last();
@@ -145,15 +128,10 @@ namespace main_exe
                 {
                     if (!(is_move_available(prev_move, move_num))) continue;
                     current_solution.Add(move_num);
-                    if (depth_limited_search(m_state.apply_move(move_num), depth - 1)) return true;
+                    depth_limited_search(m_state.apply_move(move_num), depth - 1);
                     current_solution.RemoveAt(current_solution.Count - 1);
-                    if (back_count > 0)
-                    {
-                        back_count -= 1;
-                        break;
-                    }
                 }
-                return false;
+                return;
             }
 
             var sw = new Stopwatch();
@@ -162,15 +140,13 @@ namespace main_exe
             Console.WriteLine("Start searching...");
 
 
-            for (int depth = 1; depth < 21; depth++)
-            {
-                Console.WriteLine("Start searching lenght {0}", depth);
-                back_count = 0;
-                if (depth_limited_search(scrambled_mini_state, depth)) break;
-            }
-            
-            Console.WriteLine(string.Join(" ", current_solution.Select(x => move_names[x])));
-            
+            int depth = 6;            
+                
+            Console.WriteLine("Start searching lenght {0}", depth);
+            depth_limited_search(scrambled_mini_state, depth);
+
+
+            Console.WriteLine(result.Count.ToString());
 
             sw.Stop();
             TimeSpan ts = sw.Elapsed;

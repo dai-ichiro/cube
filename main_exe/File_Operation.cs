@@ -12,14 +12,4 @@ public class File_Operation
             return (int[,])bf.Deserialize(fs);
         }
     }
-
-    public static HashSet<int> read_hash(string path)
-    {
-        using (FileStream fs = new FileStream(path, FileMode.Open))
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            return (HashSet<int>)bf.Deserialize(fs);
-        }
-    }
-
 }
