@@ -23,6 +23,7 @@ namespace main_exe
 
             int[] new_ep = new int[12];
             int now_ep_index;
+            int back_count = 0;
 
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
@@ -112,6 +113,7 @@ namespace main_exe
                     }
                     else
                     {
+                        back_count = 2;
                         return false;
                     }
                 }
@@ -133,6 +135,11 @@ namespace main_exe
                     current_solution.Add(move_num);
                     if (depth_limited_search(m_state.apply_move(move_num), depth - 1)) return true;
                     current_solution.RemoveAt(current_solution.Count - 1);
+                    if (back_count > 0)
+                    {
+                        back_count -= 1;
+                        break;
+                    }
                 }
                 return false;
             }
@@ -146,6 +153,7 @@ namespace main_exe
             for (int depth = 1; depth < 21; depth++)
             {
                 Console.WriteLine("Start searching lenght {0}", depth);
+                back_count = 0;
                 if (depth_limited_search(scrambled_mini_state, depth)) break;
             }
             
