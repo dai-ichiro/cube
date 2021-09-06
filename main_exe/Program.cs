@@ -73,7 +73,7 @@ namespace main_exe
             }
 
             var moves = new List<int>();        //初期値
-            var result = new List<int[]>();     //結果を記録するリスト
+            var result = new List<int>();     //結果を記録するリスト
 
             State state_after_moves;
 
@@ -84,7 +84,7 @@ namespace main_exe
                     state_after_moves = scramble2state(moves);
                     if(state_after_moves.cp==0 && state_after_moves.co==0 && state_after_moves.eo == 0)
                     {
-                        result.Add(moves.ToArray());
+                        result.Add(ep_to_index(state_after_moves.ep));
                     }
                     return;
                 }
@@ -104,11 +104,14 @@ namespace main_exe
             sw.Start();
             Console.WriteLine("Start searching...");
             
-            int move_count = 7;
+            int move_count = 6;
             try_move(move_count);
 
             Console.WriteLine(result.Count.ToString());
-            
+            Console.WriteLine(result[0].ToString());
+            Console.WriteLine(result[1].ToString());
+
+
             sw.Stop();
             TimeSpan ts = sw.Elapsed;
             Console.WriteLine("Finished!({0})", ts);
