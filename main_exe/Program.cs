@@ -104,13 +104,20 @@ namespace main_exe
             sw.Start();
             Console.WriteLine("Start searching...");
             
-            int move_count = 6;
+            int move_count = 8;
             try_move(move_count);
 
-            Console.WriteLine(result.Count.ToString());
-            Console.WriteLine(result[0].ToString());
-            Console.WriteLine(result[1].ToString());
+            HashSet<int> final_result = new HashSet<int>(result);
 
+            Console.WriteLine($"list_count: {result.Count}");
+            Console.WriteLine($"hash_count: {final_result.Count}");
+
+            string file_name = $"ep_index_{move_count}.data";
+            using (FileStream fs = new FileStream(file_name, FileMode.Create))
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(fs, final_result);
+            }
 
             sw.Stop();
             TimeSpan ts = sw.Elapsed;
