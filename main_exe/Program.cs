@@ -103,6 +103,14 @@ namespace main_exe
                 return ep_to_index(new_ep);  
             }
 
+            int calc_back_count(int index)
+            {
+                if (Global.ep_index_6.Contains(index)) return 2;
+                if (Global.ep_index_7.Contains(index)) return 3;
+                if (Global.ep_index_8.Contains(index)) return 3;
+                return 4;
+            }
+
             List<int> current_solution = new List<int> { };
             string[] last_5_solution = new string[] { };
 
@@ -117,7 +125,7 @@ namespace main_exe
                     }
                     else
                     {
-                        back_count = 2;
+                        back_count = calc_back_count(now_ep_index);
                         return false;
                     }
                 }
