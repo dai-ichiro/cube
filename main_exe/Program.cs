@@ -47,7 +47,7 @@ namespace main_exe
                 return start_state;
             }
 
-            State scrambled_state = scramble2state(scramble);
+            State scrambled_state = new State(0, 0, index_to_ep(123379200), 0);
             Mini_State scrambled_mini_state = new Mini_State(scrambled_state.cp, scrambled_state.co, scrambled_state.eo);
             int[] initial_ep = scrambled_state.ep;
             
@@ -73,6 +73,24 @@ namespace main_exe
                     }
                 }
                 return index;
+            }
+
+            int[] index_to_ep(int ep_index)
+            {
+                int[] ep = new int[12];
+                for (int i = 10; i > -1; i--)
+                {
+                    ep[i] = ep_index % (12 - i);
+                    ep_index /= (12 - i);
+                    for (int j = i + 1; j < 12; j++)
+                    {
+                        if (ep[j] >= ep[i])
+                        {
+                            ep[j] += 1;
+                        }
+                    }
+                }
+                return ep;
             }
 
             bool is_solved(Mini_State m_state)
