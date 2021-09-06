@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Linq;
 using System.Diagnostics;
+using System.Linq;
 
 namespace main_exe
 {
@@ -144,30 +142,15 @@ namespace main_exe
 
             Console.WriteLine("Start searching...");
 
-            if (Global.all_states_with_solution.ContainsKey((scrambled_state.cp, scrambled_state.co, ep_to_index(scrambled_state.ep), scrambled_state.eo)))
-            {
-                string[] short_solution = Global.all_states_with_solution[(scrambled_state.cp, scrambled_state.co, ep_to_index(scrambled_state.ep), scrambled_state.eo)];
-                for (int i = 1; i < short_solution.Count() + 1; i++)
-                {
-                    Console.WriteLine("Start searching lenght {0}", i);
-                }
-                Console.WriteLine(string.Join(" ", short_solution));
-            }
 
-            else
+            for (int depth = 1; depth < 21; depth++)
             {
-                for (int i = 1; i < 6; i++)
-                {
-                    Console.WriteLine("Start searching lenght {0}", i);
-                }
-
-                for (int depth = 1; depth < 16; depth++)
-                {
-                    Console.WriteLine("Start searching lenght {0}", depth + 5);
-                    if (depth_limited_search(scrambled_mini_state, depth)) break;
-                }
-                Console.WriteLine(string.Join(" ", current_solution.Select(x => move_names[x])) + " " + string.Join(" ", last_5_solution));
+                Console.WriteLine("Start searching lenght {0}", depth);
+                if (depth_limited_search(scrambled_mini_state, depth)) break;
             }
+            
+            Console.WriteLine(string.Join(" ", current_solution.Select(x => move_names[x])));
+            
 
             sw.Stop();
             TimeSpan ts = sw.Elapsed;
