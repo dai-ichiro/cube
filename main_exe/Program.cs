@@ -22,6 +22,8 @@ namespace main_exe
             Global.ep_index_6 = File_Operation.read_hash("./data/ep_index_6.data");
             Global.ep_index_7 = File_Operation.read_hash("./data/ep_index_7.data");
             Global.ep_index_8 = File_Operation.read_hash("./data/ep_index_8.data");
+            Global.ep_index_9 = File_Operation.read_hash("./data/ep_index_9.data");
+            Global.ep_index_10 = File_Operation.read_hash("./data/ep_index_10.data");
 
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
 
@@ -108,7 +110,9 @@ namespace main_exe
                 if (Global.ep_index_6.Contains(index)) return 2;
                 if (Global.ep_index_7.Contains(index)) return 3;
                 if (Global.ep_index_8.Contains(index)) return 3;
-                return 4;
+                if (Global.ep_index_9.Contains(index)) return 4;
+                if (Global.ep_index_10.Contains(index)) return 4;
+                return 5;
             }
 
             List<int> current_solution = new List<int> { };
