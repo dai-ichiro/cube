@@ -19,6 +19,10 @@ namespace main_exe
             Global.cp_eo_prune_table = File_Operation.read_array("./data/cp_eo_prune_table.data");
             Global.co_eo_prune_table = File_Operation.read_array("./data/co_eo_prune_table.data");
 
+            Global.ep_index_6 = File_Operation.read_hash("./data/ep_index_6.data");
+            Global.ep_index_7 = File_Operation.read_hash("./data/ep_index_7.data");
+            Global.ep_index_8 = File_Operation.read_hash("./data/ep_index_8.data");
+
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
 
             int[] new_ep = new int[12];
