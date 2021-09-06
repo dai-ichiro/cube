@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace main_exe
 {
@@ -140,13 +142,23 @@ namespace main_exe
             Console.WriteLine("Start searching...");
 
 
-            int depth = 6;            
+            int depth = 7;            
                 
             Console.WriteLine("Start searching lenght {0}", depth);
             depth_limited_search(scrambled_mini_state, depth);
 
 
-            Console.WriteLine(result.Count.ToString());
+            HashSet<int> final_result = new HashSet<int>(result);
+
+            Console.WriteLine($"list_count: {result.Count}");
+            Console.WriteLine($"hash_count: {final_result.Count}");
+
+            string file_name = $"ep_index_{depth}.data";
+            using (FileStream fs = new FileStream(file_name, FileMode.Create))
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(fs, final_result);
+            }
 
             sw.Stop();
             TimeSpan ts = sw.Elapsed;
