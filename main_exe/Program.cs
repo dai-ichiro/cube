@@ -19,17 +19,14 @@ namespace main_exe
             Global.cp_eo_prune_table = File_Operation.read_array("./data/cp_eo_prune_table.data");
             Global.co_eo_prune_table = File_Operation.read_array("./data/co_eo_prune_table.data");
 
-            Global.ep_index_6 = File_Operation.read_hash("./data/ep_index_6.data");
-            Global.ep_index_7 = File_Operation.read_hash("./data/ep_index_7.data");
-            Global.ep_index_8 = File_Operation.read_hash("./data/ep_index_8.data");
-            Global.ep_index_9 = File_Operation.read_hash("./data/ep_index_9.data");
-            Global.ep_index_10 = File_Operation.read_hash("./data/ep_index_10.data");
+            Global.ep_dict = File_Operation.read_dict("./data/ep_dict.data");
 
             string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
 
             int[] new_ep = new int[12];
             int now_ep_index;
             int back_count = 0;
+            int dict_index;
 
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
@@ -107,12 +104,8 @@ namespace main_exe
 
             int calc_back_count(int index)
             {
-                if (Global.ep_index_6.Contains(index)) return 2;
-                if (Global.ep_index_7.Contains(index)) return 3;
-                if (Global.ep_index_8.Contains(index)) return 3;
-                if (Global.ep_index_9.Contains(index)) return 4;
-                if (Global.ep_index_10.Contains(index)) return 4;
-                return 5;
+                Global.ep_dict.TryGetValue(index, out dict_index);
+                return dict_index == 0 ? 6 : dict_index;
             }
 
             List<int> current_solution = new List<int> { };

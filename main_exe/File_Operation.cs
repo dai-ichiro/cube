@@ -13,12 +13,12 @@ public class File_Operation
         }
     }
 
-    public static HashSet<int> read_hash(string path)
+    public static Dictionary<int, int> read_dict(string path)
     {
         using (FileStream fs = new FileStream(path, FileMode.Open))
         {
             BinaryFormatter bf = new BinaryFormatter();
-            return (HashSet<int>)bf.Deserialize(fs);
+            return (Dictionary<int, int>)bf.Deserialize(fs);
         }
     }
 

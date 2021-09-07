@@ -33,10 +33,6 @@ namespace main_exe
             {16, new int[]{ 1, 0, 2, 3, 8, 5, 6, 7, 4, 9, 10, 11 } },
             {17, new int[]{ 8, 4, 2, 3, 0, 5, 6, 7, 1, 9, 10, 11 } }
         };
-        public static HashSet<int> ep_index_6;
-        public static HashSet<int> ep_index_7;
-        public static HashSet<int> ep_index_8;
-        public static HashSet<int> ep_index_9;
-        public static HashSet<int> ep_index_10;
+        public static Dictionary<int, int> ep_dict;
     }
 }
