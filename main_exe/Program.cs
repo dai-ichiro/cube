@@ -16,8 +16,8 @@ namespace main_exe
             Global.ep_index_8 = File_Operation.read_hash("./data/ep_index_8.data");
             Global.ep_index_9 = File_Operation.read_hash("./data/ep_index_9.data");
             Global.ep_index_10 = File_Operation.read_hash("./data/ep_index_10.data");
-            Global.ep_index_10 = File_Operation.read_hash("./data/ep_index_11.data");
-            Global.ep_index_10 = File_Operation.read_hash("./data/ep_index_12.data");
+            Global.ep_index_11 = File_Operation.read_hash("./data/ep_index_11.data");
+            Global.ep_index_12 = File_Operation.read_hash("./data/ep_index_12.data");
 
             Console.WriteLine("Making new dictionary...");
 
