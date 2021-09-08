@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace main_exe
 {
@@ -22,9 +23,9 @@ namespace main_exe
 
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
-            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
+            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
-            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
+            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
             //scramble = "R' U' F R' B' F2 L2 D' U'";
             //scramble = "R' U' F R' B' F2 L2";
@@ -49,12 +50,24 @@ namespace main_exe
 
             Console.WriteLine("Start searching...");
 
-            Search search = new Search(scrambled_state);
+            void multi_task(State scrambled_state, int start_depth, int last_depth)
+            {
+                Search search = new Search(scrambled_state);
+                string result_string = search.start_search(start_depth, last_depth);
+                Console.WriteLine($"searching depth from {start_depth} to {last_depth}");
+                Console.WriteLine(result_string);
+                
+            }
 
-            string result_string = search.start_search(9);
-            
-            Console.WriteLine(result_string);
-            
+            Task.Run(() => multi_task(scrambled_state, 1, 10));
+            Task.Run(() => multi_task(scrambled_state, 11, 15));
+            Task.Run(() => multi_task(scrambled_state, 16, 16));
+            Task.Run(() => multi_task(scrambled_state, 17, 17));
+            Task.Run(() => multi_task(scrambled_state, 18, 18));
+            Task.Run(() => multi_task(scrambled_state, 19, 19));
+            Task.Run(() => multi_task(scrambled_state, 20, 20));
+
+
             sw.Stop();
             TimeSpan ts = sw.Elapsed;
             Console.WriteLine("Finished!({0})", ts);

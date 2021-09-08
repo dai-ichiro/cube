@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace main_exe
@@ -120,11 +119,10 @@ namespace main_exe
             return false;
         }
 
-        public string start_search(int current_depth)
+        public string start_search(int start_depth, int last_depth)
         {
-            for (int depth = current_depth; depth < current_depth+5; depth++)
+            for (int depth = start_depth; depth < start_depth + 1; depth++)
             {
-                Console.WriteLine("Start searching lenght {0}", depth);
                 back_count = 0;
                 if (depth_limited_search(scrambled_mini_state, depth)) break;
             }
