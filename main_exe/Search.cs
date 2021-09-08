@@ -120,9 +120,9 @@ namespace main_exe
             return false;
         }
 
-        public string start_search()
+        public string start_search(int current_depth)
         {
-            for (int depth = 1; depth < 21; depth++)
+            for (int depth = current_depth; depth < current_depth+5; depth++)
             {
                 Console.WriteLine("Start searching lenght {0}", depth);
                 back_count = 0;

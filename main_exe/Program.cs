@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -52,11 +51,10 @@ namespace main_exe
 
             Search search = new Search(scrambled_state);
 
-            string result_string = search.start_search();
+            string result_string = search.start_search(9);
             
             Console.WriteLine(result_string);
             
-
             sw.Stop();
             TimeSpan ts = sw.Elapsed;
             Console.WriteLine("Finished!({0})", ts);
