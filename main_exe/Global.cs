@@ -12,6 +12,8 @@ namespace main_exe
         public static int[,] cp_eo_prune_table;
         public static int[,] co_eo_prune_table;
 
+        public static string[] move_names = { "U", "U2", "U'", "D", "D2", "D'", "L", "L2", "L'", "R", "R2", "R'", "F", "F2", "F'", "B", "B2", "B'" };
+
         public static Dictionary<int, int[]> ep_move_dict = new Dictionary<int, int[]>()
         {
             {0,  new int[]{ 0, 1, 2, 3, 7, 4, 5, 6, 8, 9, 10, 11 } },
