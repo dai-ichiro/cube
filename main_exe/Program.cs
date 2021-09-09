@@ -89,7 +89,7 @@ namespace main_exe
             TimeSpan ts = sw.Elapsed;
             Console.WriteLine("Finished!({0})", ts);
 
-            Console.ReadLine();
+            Console.ReadKey();
         }
     }
 }
