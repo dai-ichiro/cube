@@ -23,11 +23,11 @@ namespace main_exe
 
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
-            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
+            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
-            //scramble = "R' U' F R' B' F2 L2 D' U'";
+            scramble = "R' U' F R' B' F2 L2 D' U'";
             //scramble = "R' U' F R' B' F2 L2";
             //scramble = "R' U' F R' B'";
             //scramble = "R' U' F R'";
@@ -45,33 +45,44 @@ namespace main_exe
 
             State scrambled_state = scramble2state(scramble);
 
-            var sw = new Stopwatch();
-            sw.Start();
+            Console.WriteLine($"start time: {DateTime.Now}");
 
             Console.WriteLine("Start searching...");
 
-            void multi_task(State scrambled_state, int start_depth, int last_depth)
+            void multi_task(State scrambled_state, int first_move)
             {
+                State state_after_move = scrambled_state.apply_move(first_move);
                 Search search = new Search(scrambled_state);
-                string result_string = search.start_search(start_depth, last_depth);
-                Console.WriteLine($"searching depth from {start_depth} to {last_depth}");
-                Console.WriteLine(result_string);
-                
+                string result_string = search.start_search();
+
+                if (!(result_string == null))
+                {
+                    Console.WriteLine(Global.move_names[first_move] + result_string);
+                    Console.WriteLine($"finish_time: {DateTime.Now}");
+                }  
             }
 
-            Task.Run(() => multi_task(scrambled_state, 1, 10));
-            Task.Run(() => multi_task(scrambled_state, 11, 15));
-            Task.Run(() => multi_task(scrambled_state, 16, 16));
-            Task.Run(() => multi_task(scrambled_state, 17, 17));
-            Task.Run(() => multi_task(scrambled_state, 18, 18));
-            Task.Run(() => multi_task(scrambled_state, 19, 19));
-            Task.Run(() => multi_task(scrambled_state, 20, 20));
+            State state_after_one_move;
+
+            state_after_one_move = scrambled_state.apply_move(0);
+            Task.Run(() => multi_task(state_after_one_move, 0));
+
+            state_after_one_move = scrambled_state.apply_move(1);
+            Task.Run(() => multi_task(state_after_one_move, 1));
+
+            state_after_one_move = scrambled_state.apply_move(2);
+            Task.Run(() => multi_task(state_after_one_move, 2));
+
+            state_after_one_move = scrambled_state.apply_move(3);
+            Task.Run(() => multi_task(state_after_one_move, 3));
 
 
-            sw.Stop();
-            TimeSpan ts = sw.Elapsed;
-            Console.WriteLine("Finished!({0})", ts);
-
+            /*
+            for (int i = 0; i < 18; i++)
+            {
+                Task.Run(() => multi_task(scrambled_state, i));
+            }
+            */
             Console.ReadKey();
         }
     }

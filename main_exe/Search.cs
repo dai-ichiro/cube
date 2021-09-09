@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace main_exe
 {
@@ -103,7 +104,7 @@ namespace main_exe
                 return false;
             }
 
-            int prev_move = current_solution.Count == 0 ? -1 : current_solution.Last();
+            int prev_move = current_solution.Count == 0 ? -1: current_solution.Last();
             for (int move_num = 0; move_num < 18; move_num++)
             {
                 if (!(is_move_available(prev_move, move_num))) continue;
@@ -119,14 +120,13 @@ namespace main_exe
             return false;
         }
 
-        public string start_search(int start_depth, int last_depth)
+        public string start_search()
         {
-            for (int depth = start_depth; depth < start_depth + 1; depth++)
+            for (int depth = 0; depth < 20; depth++)
             {
                 back_count = 0;
                 if (depth_limited_search(scrambled_mini_state, depth)) break;
             }
-
             return string.Join(" ", current_solution.Select(x => Global.move_names[x]));
         } 
     }
