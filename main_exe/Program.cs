@@ -89,29 +89,6 @@ namespace main_exe
             TimeSpan ts = sw.Elapsed;
             Console.WriteLine("Finished!({0})", ts);
 
-
-            /*
-            State state_after_one_move;
-
-            state_after_one_move = scrambled_state.apply_move(0);
-            Task.Run(() => multi_task(state_after_one_move, 0));
-
-            state_after_one_move = scrambled_state.apply_move(1);
-            Task.Run(() => multi_task(state_after_one_move, 1));
-
-            state_after_one_move = scrambled_state.apply_move(2);
-            Task.Run(() => multi_task(state_after_one_move, 2));
-
-            state_after_one_move = scrambled_state.apply_move(3);
-            Task.Run(() => multi_task(state_after_one_move, 3));
-
-
-            
-            for (int i = 0; i < 18; i++)
-            {
-                Task.Run(() => multi_task(scrambled_state, i));
-            }
-            */
             Console.ReadLine();
         }
     }
