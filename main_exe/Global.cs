@@ -2,8 +2,10 @@
 
 namespace main_exe
 {
-    public static class Global
+    public class Global
     {
+        public static bool finished = false;
+
         public static int[,] cp_move_table;
         public static int[,] co_move_table;
         public static int[,] eo_move_table;

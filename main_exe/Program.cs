@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace main_exe
 {
@@ -9,6 +10,8 @@ namespace main_exe
     {
         static void Main(string[] args)
         {
+            
+
             Console.WriteLine("Loading pretrained data...");
 
             Global.cp_move_table = File_Operation.read_array("./data/cp_move_table.data");
@@ -23,11 +26,11 @@ namespace main_exe
 
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
-            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
+            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
-            scramble = "R' U' F R' B' F2 L2 D' U'";
+            //scramble = "R' U' F R' B' F2 L2 D' U'";
             //scramble = "R' U' F R' B' F2 L2";
             //scramble = "R' U' F R' B'";
             //scramble = "R' U' F R'";
@@ -45,23 +48,51 @@ namespace main_exe
 
             State scrambled_state = scramble2state(scramble);
 
-            Console.WriteLine($"start time: {DateTime.Now}");
+            var sw = new Stopwatch();
+            sw.Start();
 
             Console.WriteLine("Start searching...");
 
-            void multi_task(State scrambled_state, int first_move)
+            void multi_task(State scrambled_state, int first_move, int depth)
             {
                 State state_after_move = scrambled_state.apply_move(first_move);
-                Search search = new Search(scrambled_state);
-                string result_string = search.start_search();
-
-                if (!(result_string == null))
-                {
-                    Console.WriteLine(Global.move_names[first_move] + result_string);
-                    Console.WriteLine($"finish_time: {DateTime.Now}");
-                }  
+                Mini_State mini_state = new Mini_State(state_after_move.cp, state_after_move.co, state_after_move.eo);
+                Search search = new Search(mini_state, scrambled_state.ep, first_move);
+                search.start_search(depth); 
             }
 
+            List<Task> create_task(int depth)
+            {
+                List<Task> task_list = new List<Task>();
+                for (int i = 0; i < 18; i++)
+                {
+                    int temp_move = i;
+                    Task task = new Task(() => multi_task(scrambled_state, temp_move, depth));
+                    task_list.Add(task);
+                }
+                return task_list;
+            }
+
+            for(int i = 0; i < 20; i++)
+            {
+                Console.WriteLine("Start searching lenght {0}", i + 1);
+
+                var task_list = create_task(i);
+
+                foreach (Task each_task in task_list)
+                {
+                    each_task.Start();
+                }
+                Task.WaitAll(task_list.ToArray());
+                if (Global.finished == true) break;
+            }
+
+            sw.Stop();
+            TimeSpan ts = sw.Elapsed;
+            Console.WriteLine("Finished!({0})", ts);
+
+
+            /*
             State state_after_one_move;
 
             state_after_one_move = scrambled_state.apply_move(0);
@@ -77,13 +108,13 @@ namespace main_exe
             Task.Run(() => multi_task(state_after_one_move, 3));
 
 
-            /*
+            
             for (int i = 0; i < 18; i++)
             {
                 Task.Run(() => multi_task(scrambled_state, i));
             }
             */
-            Console.ReadKey();
+            Console.ReadLine();
         }
     }
 }

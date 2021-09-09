@@ -16,13 +16,14 @@ namespace main_exe
         
         List<int> current_solution;
 
-        public Search(State scrambled_state)
+        public Search(Mini_State mini_state, int[] scrambled_ep, int fisrt_move)
         {
-            scrambled_mini_state = new Mini_State(scrambled_state.cp, scrambled_state.co, scrambled_state.eo);
-            initial_ep = scrambled_state.ep;
+            scrambled_mini_state = mini_state;
+            initial_ep = scrambled_ep;
 
             new_ep = new int[12];
             current_solution = new List<int> { };
+            current_solution.Add(fisrt_move);
             back_count = 0;
         }
 
@@ -80,6 +81,11 @@ namespace main_exe
 
         public bool depth_limited_search(Mini_State m_state, int depth)
         {
+            if (Global.finished == true)
+            {
+                return false;
+            }
+
             if (depth == 0 && is_solved(m_state))
             {
                 now_ep_index = ep_move(initial_ep, current_solution);
@@ -120,14 +126,14 @@ namespace main_exe
             return false;
         }
 
-        public string start_search()
+        public void start_search(int depth)
         {
-            for (int depth = 0; depth < 20; depth++)
+            back_count = 0;
+            if (depth_limited_search(scrambled_mini_state, depth))
             {
-                back_count = 0;
-                if (depth_limited_search(scrambled_mini_state, depth)) break;
+                Console.WriteLine(string.Join(" ", current_solution.Select(x => Global.move_names[x])));
+                Global.finished = true;
             }
-            return string.Join(" ", current_solution.Select(x => Global.move_names[x]));
-        } 
+        }
     }
 }
