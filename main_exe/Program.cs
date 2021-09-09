@@ -33,8 +33,8 @@ namespace main_exe
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
-            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
-            scramble = "R' U' F R' B' F2 L2 D' U'";
+            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
+            //scramble = "R' U' F R' B' F2 L2 D' U'";
             //scramble = "R' U' F R' B' F2 L2";
             //scramble = "R' U' F R' B'";
             //scramble = "R' U' F R'";
@@ -51,8 +51,6 @@ namespace main_exe
             }
 
             State scrambled_state = scramble2state(scramble);
-            Mini_State scrambled_mini_state = new Mini_State(scrambled_state.cp, scrambled_state.co, scrambled_state.eo);
-            int[] initial_ep = scrambled_state.ep;
             
             bool is_move_available(int pre, int now)
             {
@@ -108,8 +106,14 @@ namespace main_exe
                 return dict_index == 0 ? 6 : dict_index;
             }
 
-            List<int> current_solution = new List<int> {};
-            string[] last_5_solution = new string[] { };
+            List<int> current_solution = new List<int> {3};
+            Console.WriteLine(current_solution.Count.ToString());
+            int[] initial_ep = scrambled_state.ep;
+            scrambled_state = scrambled_state.apply_move(3);
+            Mini_State scrambled_mini_state = new Mini_State(scrambled_state.cp, scrambled_state.co, scrambled_state.eo);
+            
+
+
 
             bool depth_limited_search(Mini_State m_state, int depth)
             {
@@ -159,9 +163,9 @@ namespace main_exe
             Console.WriteLine("Start searching...");
 
 
-            for (int depth = 1; depth < 21; depth++)
+            for (int depth = 0; depth < 21; depth++)
             {
-                Console.WriteLine("Start searching lenght {0}", depth);
+                Console.WriteLine("Start searching lenght {0}", depth + 1);
                 back_count = 0;
                 if (depth_limited_search(scrambled_mini_state, depth)) break;
             }
