@@ -10,8 +10,6 @@ namespace main_exe
     {
         static void Main(string[] args)
         {
-            
-
             Console.WriteLine("Loading pretrained data...");
 
             Global.cp_move_table = File_Operation.read_array("./data/cp_move_table.data");

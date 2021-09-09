@@ -117,6 +117,7 @@ namespace main_exe
                 current_solution.Add(move_num);
                 if (depth_limited_search(m_state.apply_move(move_num), depth - 1)) return true;
                 current_solution.RemoveAt(current_solution.Count - 1);
+                if (Global.finished == true) return false;
                 if (back_count > 0)
                 {
                     back_count -= 1;
