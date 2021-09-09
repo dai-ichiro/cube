@@ -30,11 +30,11 @@ namespace main_exe
 
             string scramble;
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B D2 L D2 F2 U2 L R' U' F";
-            scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
+            //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R B";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2 D' R";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D' L2";
             //scramble = "R' U' F R' B' F2 L2 D' U' L2 F2 D'";
-            //scramble = "R' U' F R' B' F2 L2 D' U'";
+            scramble = "R' U' F R' B' F2 L2 D' U'";
             //scramble = "R' U' F R' B' F2 L2";
             //scramble = "R' U' F R' B'";
             //scramble = "R' U' F R'";
@@ -108,7 +108,7 @@ namespace main_exe
                 return dict_index == 0 ? 6 : dict_index;
             }
 
-            List<int> current_solution = new List<int> { };
+            List<int> current_solution = new List<int> {};
             string[] last_5_solution = new string[] { };
 
             bool depth_limited_search(Mini_State m_state, int depth)
@@ -137,7 +137,7 @@ namespace main_exe
                     return false;
                 }
 
-                int prev_move = current_solution.Count == 0 ? -1 : current_solution.Last();
+                int prev_move = current_solution.Count == 0 ? -1: current_solution.Last();
                 for (int move_num = 0; move_num < 18; move_num++)
                 {
                     if (!(is_move_available(prev_move, move_num))) continue;
